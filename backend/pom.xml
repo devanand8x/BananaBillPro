@@ -24,7 +24,7 @@
         <twilio.version>10.6.3</twilio.version>
         <sentry.version>7.20.1</sentry.version>
         <bucket4j.version>8.10.1</bucket4j.version>
-        <testcontainers.version>1.20.4</testcontainers.version>
+        <testcontainers.version>1.21.4</testcontainers.version>
     </properties>
     
     <dependencies>
