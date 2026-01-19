@@ -25,49 +25,54 @@ import java.time.Duration;
 @EnableCaching
 public class CacheConfig {
 
-    /**
-     * Cache names used in the application
-     */
-    public static final String BILL_STATS = "billStats";
-    public static final String FARMER_CACHE = "farmers";
-    public static final String RECENT_BILLS = "recentBills";
+        /**
+         * Cache names used in the application
+         */
+        public static final String BILL_STATS = "billStats";
+        public static final String FARMER_CACHE = "farmers";
+        public static final String RECENT_BILLS = "recentBills";
 
-    @Autowired(required = false)
-    private RedisConnectionFactory redisConnectionFactory;
+        @Autowired(required = false)
+        private RedisConnectionFactory redisConnectionFactory;
 
-    /**
-     * Redis Cache Manager for production
-     */
-    @Bean
-    @Primary
-    @ConditionalOnProperty(name = "spring.data.redis.host")
-    public CacheManager redisCacheManager() {
-        RedisCacheConfiguration config = RedisCacheConfiguration.defaultCacheConfig()
-                .entryTtl(Duration.ofHours(1))
-                .serializeKeysWith(RedisSerializationContext.SerializationPair.fromSerializer(
-                        new StringRedisSerializer()))
-                .serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(
-                        new GenericJackson2JsonRedisSerializer()))
-                .disableCachingNullValues();
+        /**
+         * Redis Cache Manager for production
+         */
+        @Bean
+        @Primary
+        @ConditionalOnProperty(name = "spring.cache.type", havingValue = "redis")
+        public CacheManager redisCacheManager() {
+                if (redisConnectionFactory == null) {
+                        // Fallback if factory is null even if property says redis
+                        return new ConcurrentMapCacheManager(BILL_STATS, FARMER_CACHE, RECENT_BILLS);
+                }
 
-        return RedisCacheManager.builder(redisConnectionFactory)
-                .cacheDefaults(config)
-                .withCacheConfiguration(FARMER_CACHE, config.entryTtl(Duration.ofHours(24)))
-                .withCacheConfiguration(BILL_STATS, config.entryTtl(Duration.ofMinutes(10)))
-                .withCacheConfiguration(RECENT_BILLS, config.entryTtl(Duration.ofMinutes(5)))
-                .transactionAware()
-                .build();
-    }
+                RedisCacheConfiguration config = RedisCacheConfiguration.defaultCacheConfig()
+                                .entryTtl(Duration.ofHours(1))
+                                .serializeKeysWith(RedisSerializationContext.SerializationPair.fromSerializer(
+                                                new StringRedisSerializer()))
+                                .serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(
+                                                new GenericJackson2JsonRedisSerializer()))
+                                .disableCachingNullValues();
 
-    /**
-     * In-memory Cache Manager for development (fallback)
-     */
-    @Bean
-    @ConditionalOnProperty(name = "spring.data.redis.host", matchIfMissing = true)
-    public CacheManager inMemoryCacheManager() {
-        return new ConcurrentMapCacheManager(
-                BILL_STATS,
-                FARMER_CACHE,
-                RECENT_BILLS);
-    }
+                return RedisCacheManager.builder(redisConnectionFactory)
+                                .cacheDefaults(config)
+                                .withCacheConfiguration(FARMER_CACHE, config.entryTtl(Duration.ofHours(24)))
+                                .withCacheConfiguration(BILL_STATS, config.entryTtl(Duration.ofMinutes(10)))
+                                .withCacheConfiguration(RECENT_BILLS, config.entryTtl(Duration.ofMinutes(5)))
+                                .transactionAware()
+                                .build();
+        }
+
+        /**
+         * In-memory Cache Manager for development (fallback)
+         */
+        @Bean
+        @ConditionalOnProperty(name = "spring.cache.type", havingValue = "simple", matchIfMissing = true)
+        public CacheManager inMemoryCacheManager() {
+                return new ConcurrentMapCacheManager(
+                                BILL_STATS,
+                                FARMER_CACHE,
+                                RECENT_BILLS);
+        }
 }
