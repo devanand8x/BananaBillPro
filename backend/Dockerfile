@@ -12,7 +12,7 @@ COPY --from=build /app/target/*.jar app.jar
 
 # Environment variables
 ENV PORT=8080
-ENV JAVA_OPTS="-Xmx512m -Xms256m"
+ENV JAVA_OPTS="-Xmx350m -Xms200m"
 
 EXPOSE 8080
 
