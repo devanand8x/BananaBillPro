@@ -14,7 +14,7 @@ A complete billing and management system for banana traders. Built with React, S
 - **Reports** - Monthly reports, farmer-wise statements, export to PDF
 - **WhatsApp Integration** - Send bills and statements directly via Twilio
 - **PWA Support** - Install as app on mobile devices
-- **Multi-language** - Hindi & English support
+- **Multi-language** - English, Hindi & Marathi support
 
 ## 🔧 Tech Stack
 
