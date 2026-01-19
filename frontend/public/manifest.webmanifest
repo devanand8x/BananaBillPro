@@ -1,0 +1,21 @@
+{
+    "name": "Banana Bill Pro",
+    "short_name": "BananaBill",
+    "description": "Professional billing system for banana export and trading",
+    "start_url": "/",
+    "display": "standalone",
+    "background_color": "#ffffff",
+    "theme_color": "#F5A623",
+    "icons": [
+        {
+            "src": "/bananalogo.png",
+            "sizes": "192x192",
+            "type": "image/png"
+        },
+        {
+            "src": "/bananalogo.png",
+            "sizes": "512x512",
+            "type": "image/png"
+        }
+    ]
+}

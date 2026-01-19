@@ -1,0 +1,365 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* Banana Bill Brand Colors - Golden Professional Theme */
+    --background: 45 30% 98%;
+    --foreground: 220 25% 10%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 220 25% 10%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 220 25% 10%;
+
+    /* Primary - Rich Golden Yellow */
+    --primary: 45 95% 50%;
+    --primary-foreground: 220 25% 10%;
+
+    /* Secondary - Warm Slate */
+    --secondary: 220 15% 94%;
+    --secondary-foreground: 220 25% 20%;
+
+    --muted: 45 20% 95%;
+    --muted-foreground: 220 15% 45%;
+
+    /* Accent - Deep Forest Green */
+    --accent: 145 45% 35%;
+    --accent-foreground: 0 0% 100%;
+
+    --destructive: 0 72% 51%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 45 20% 88%;
+    --input: 45 20% 90%;
+    --ring: 45 95% 50%;
+
+    --radius: 0.75rem;
+
+    /* Custom tokens */
+    --success: 145 63% 42%;
+    --success-foreground: 0 0% 100%;
+    --warning: 38 92% 50%;
+    --warning-foreground: 220 25% 10%;
+
+    /* Gradients */
+    --gradient-primary: linear-gradient(135deg, hsl(45, 95%, 55%) 0%, hsl(38, 92%, 50%) 100%);
+    --gradient-hero: linear-gradient(145deg, hsl(45, 95%, 52%) 0%, hsl(42, 90%, 45%) 50%, hsl(38, 85%, 40%) 100%);
+    --gradient-card: linear-gradient(180deg, hsl(0, 0%, 100%) 0%, hsl(45, 30%, 98%) 100%);
+    --gradient-dark: linear-gradient(135deg, hsl(220, 25%, 12%) 0%, hsl(220, 30%, 8%) 100%);
+
+    /* Shadows */
+    --shadow-sm: 0 1px 2px hsl(220 25% 10% / 0.05);
+    --shadow-md: 0 4px 6px -1px hsl(220 25% 10% / 0.08), 0 2px 4px -1px hsl(220 25% 10% / 0.04);
+    --shadow-lg: 0 10px 15px -3px hsl(220 25% 10% / 0.1), 0 4px 6px -2px hsl(220 25% 10% / 0.05);
+    --shadow-xl: 0 20px 25px -5px hsl(220 25% 10% / 0.12), 0 10px 10px -5px hsl(220 25% 10% / 0.04);
+    --shadow-golden: 0 4px 14px hsl(45 95% 50% / 0.35);
+
+    --sidebar-background: 0 0% 98%;
+    --sidebar-foreground: 240 5.3% 26.1%;
+    --sidebar-primary: 240 5.9% 10%;
+    --sidebar-primary-foreground: 0 0% 98%;
+    --sidebar-accent: 240 4.8% 95.9%;
+    --sidebar-accent-foreground: 240 5.9% 10%;
+    --sidebar-border: 220 13% 91%;
+    --sidebar-ring: 217.2 91.2% 59.8%;
+  }
+
+  .dark {
+    --background: 220 25% 8%;
+    --foreground: 45 20% 95%;
+
+    --card: 220 25% 12%;
+    --card-foreground: 45 20% 95%;
+
+    --popover: 220 25% 12%;
+    --popover-foreground: 45 20% 95%;
+
+    --primary: 45 95% 55%;
+    --primary-foreground: 220 25% 10%;
+
+    --secondary: 220 20% 18%;
+    --secondary-foreground: 45 20% 90%;
+
+    --muted: 220 20% 15%;
+    --muted-foreground: 220 15% 60%;
+
+    --accent: 145 50% 45%;
+    --accent-foreground: 0 0% 100%;
+
+    --destructive: 0 62% 45%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 220 20% 20%;
+    --input: 220 20% 18%;
+    --ring: 45 95% 55%;
+
+    --sidebar-background: 220 25% 10%;
+    --sidebar-foreground: 45 20% 90%;
+    --sidebar-primary: 45 95% 55%;
+    --sidebar-primary-foreground: 220 25% 10%;
+    --sidebar-accent: 220 20% 15%;
+    --sidebar-accent-foreground: 45 20% 90%;
+    --sidebar-border: 220 20% 18%;
+    --sidebar-ring: 45 95% 55%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground font-sans antialiased;
+  }
+
+  /* Hide number input spinner arrows */
+  input[type="number"]::-webkit-inner-spin-button,
+  input[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+
+  input[type="number"] {
+    -moz-appearance: textfield;
+    appearance: textfield;
+  }
+
+  /* Disable scroll wheel on focused number inputs */
+  input[type="number"]:focus {
+    pointer-events: none;
+  }
+
+  input[type="number"]:focus:hover {
+    pointer-events: auto;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    @apply font-semibold tracking-tight;
+  }
+}
+
+@layer components {
+  .glass-card {
+    @apply bg-card/80 backdrop-blur-md border border-border/50 shadow-lg;
+  }
+
+  .stat-card {
+    @apply bg-card rounded-2xl p-6 shadow-md border border-border/40 transition-all duration-300 hover:shadow-xl hover:-translate-y-1 hover:border-primary/30;
+    background: linear-gradient(145deg, hsl(var(--card)) 0%, hsl(var(--muted)/0.3) 100%);
+  }
+
+  .input-field {
+    @apply h-12 px-4 rounded-xl border-2 border-input bg-background text-foreground placeholder:text-muted-foreground focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all duration-200;
+  }
+
+  .btn-primary {
+    @apply bg-primary text-primary-foreground font-semibold px-6 py-3 rounded-xl shadow-md hover:shadow-golden transition-all duration-300 hover:-translate-y-1 active:translate-y-0 active:scale-[0.98];
+    background: linear-gradient(135deg, hsl(var(--primary)) 0%, hsl(38, 92%, 50%) 100%);
+  }
+
+  .btn-secondary {
+    @apply bg-secondary text-secondary-foreground font-medium px-6 py-3 rounded-xl border-2 border-border hover:bg-secondary/80 hover:border-primary/30 transition-all duration-300;
+  }
+
+  .btn-accent {
+    @apply bg-accent text-accent-foreground font-semibold px-6 py-3 rounded-xl shadow-md hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300;
+    background: linear-gradient(135deg, hsl(var(--accent)) 0%, hsl(145, 50%, 30%) 100%);
+  }
+
+  .page-container {
+    @apply min-h-screen bg-background;
+  }
+
+  .content-container {
+    @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6;
+  }
+
+  .form-section {
+    @apply bg-card rounded-2xl p-6 shadow-md border border-border/40 backdrop-blur-sm;
+    background: linear-gradient(180deg, hsl(var(--card)) 0%, hsl(var(--muted)/0.2) 100%);
+  }
+
+  .form-label {
+    @apply text-sm font-medium text-foreground mb-2 block;
+  }
+
+  .bill-preview {
+    @apply bg-card rounded-2xl overflow-hidden shadow-xl border border-border;
+  }
+
+  .bill-header {
+    @apply bg-gradient-to-r from-primary to-warning p-6 text-primary-foreground;
+  }
+
+  .amount-highlight {
+    @apply bg-accent text-accent-foreground font-bold text-xl px-4 py-3 rounded-xl;
+  }
+
+  .logo-container {
+    @apply w-12 h-12 rounded-2xl bg-gradient-to-br from-primary to-warning flex items-center justify-center shadow-golden transition-transform duration-300 hover:scale-105;
+  }
+
+  .header-bar {
+    @apply bg-card/95 backdrop-blur-md border-b border-border/50 sticky top-0 z-10;
+  }
+
+  .card-hover {
+    @apply transition-all duration-300 hover:shadow-xl hover:-translate-y-1 hover:border-primary/30;
+  }
+}
+
+@layer utilities {
+  .animate-fade-in {
+    animation: fadeIn 0.4s ease-out forwards;
+  }
+
+  .animate-slide-up {
+    animation: slideUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+
+  .animate-scale-in {
+    animation: scaleIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+
+  .animate-glow {
+    animation: glow 2s ease-in-out infinite alternate;
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(8px);
+    }
+
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes slideUp {
+    from {
+      opacity: 0;
+      transform: translateY(24px);
+    }
+
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes scaleIn {
+    from {
+      opacity: 0;
+      transform: scale(0.92);
+    }
+
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+
+  @keyframes glow {
+    from {
+      box-shadow: 0 0 20px hsl(var(--primary) / 0.2);
+    }
+
+    to {
+      box-shadow: 0 0 30px hsl(var(--primary) / 0.4);
+    }
+  }
+}
+
+/* Print styles for bill */
+@media print {
+
+  /* Force exact colors */
+  * {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  /* Reset body for printing */
+  html, body {
+    background: white !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    width: 100% !important;
+    height: auto !important;
+  }
+
+  /* Hide EVERYTHING by default */
+  body * {
+    visibility: hidden;
+  }
+
+  /* Show only the printable bill area */
+  .print-area,
+  .print-area * {
+    visibility: visible !important;
+  }
+
+  /* Position print area at top */
+  .print-area {
+    position: absolute !important;
+    left: 0 !important;
+    top: 0 !important;
+    width: 100% !important;
+    background: white !important;
+    box-shadow: none !important;
+    border: none !important;
+    margin: 0 !important;
+    padding: 10mm !important;
+  }
+
+  /* Hide navigation, buttons, and UI elements */
+  .no-print,
+  header,
+  nav,
+  footer,
+  button,
+  .header-bar,
+  [data-sonner-toaster],
+  .sticky {
+    display: none !important;
+  }
+
+  /* Hide gray background container */
+  .min-h-screen {
+    background: white !important;
+    min-height: auto !important;
+  }
+
+  /* Hide any padding/margin around bill */
+  .content-container,
+  .page-container {
+    padding: 0 !important;
+    margin: 0 !important;
+    background: white !important;
+  }
+
+  /* Remove shadows and borders */
+  .bill-preview,
+  .bg-white,
+  [class*="shadow"],
+  [class*="border"] {
+    box-shadow: none !important;
+  }
+
+  /* Page settings */
+  @page {
+    margin: 5mm;
+    size: A4;
+  }
+}

@@ -1,0 +1,109 @@
+name: Bundle Size Check
+
+on:
+  pull_request:
+    branches: [main, develop]
+    paths:
+      - 'frontend/**'
+  push:
+    branches: [main]
+    paths:
+      - 'frontend/**'
+
+jobs:
+  bundle-size:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+          cache-dependency-path: frontend/package-lock.json
+
+      - name: Install dependencies
+        working-directory: frontend
+        run: npm ci
+
+      - name: Build production bundle
+        working-directory: frontend
+        run: npm run build
+
+      - name: Analyze bundle size
+        working-directory: frontend
+        run: |
+          echo "## Bundle Size Analysis" >> $GITHUB_STEP_SUMMARY
+          
+          # Get total dist size
+          TOTAL_SIZE=$(du -sh dist | cut -f1)
+          echo "📦 **Total Bundle Size:** $TOTAL_SIZE" >> $GITHUB_STEP_SUMMARY
+          
+          # Get JS size
+          JS_SIZE=$(find dist/assets -name "*.js" -exec du -ch {} + | grep total | cut -f1)
+          echo "📜 **JavaScript:** $JS_SIZE" >> $GITHUB_STEP_SUMMARY
+          
+          # Get CSS size
+          CSS_SIZE=$(find dist/assets -name "*.css" -exec du -ch {} + | grep total | cut -f1)
+          echo "🎨 **CSS:** $CSS_SIZE" >> $GITHUB_STEP_SUMMARY
+          
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### Largest Files:" >> $GITHUB_STEP_SUMMARY
+          find dist/assets -type f -exec du -h {} + | sort -rh | head -10 >> $GITHUB_STEP_SUMMARY
+
+      - name: Check bundle size limit
+        working-directory: frontend/dist
+        run: |
+          # Get size in KB
+          SIZE=$(du -sk . | cut -f1)
+          LIMIT=500 # 500KB limit
+          
+          echo "Bundle size: ${SIZE}KB"
+          echo "Limit: ${LIMIT}KB"
+          
+          if [ $SIZE -gt $LIMIT ]; then
+            echo "❌ Bundle size ($SIZE KB) exceeds limit ($LIMIT KB)"
+            exit 1
+          else
+            echo "✅ Bundle size is within limit"
+          fi
+
+      - name: Upload bundle stats
+        uses: actions/upload-artifact@v4
+        with:
+          name: bundle-stats
+          path: frontend/dist/stats.html
+          retention-days: 30
+
+      - name: Comment PR with bundle size
+        if: github.event_name == 'pull_request'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const path = require('path');
+            
+            const distPath = path.join(process.env.GITHUB_WORKSPACE, 'frontend', 'dist');
+            const totalSize = require('child_process')
+              .execSync(`du -sh ${distPath}`)
+              .toString()
+              .split('\t')[0];
+            
+            const comment = `## 📦 Bundle Size Report
+            
+            **Total Size:** ${totalSize}
+            
+            View detailed stats in the artifacts section.
+            
+            ✅ Bundle size check passed!
+            `;
+            
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: comment
+            });
