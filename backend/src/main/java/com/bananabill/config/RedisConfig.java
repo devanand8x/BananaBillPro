@@ -14,7 +14,7 @@ import org.springframework.data.redis.serializer.StringRedisSerializer;
  * Redis configuration for caching and rate limiting
  */
 @Configuration
-@ConditionalOnProperty(name = "spring.data.redis.host")
+@ConditionalOnProperty(name = "rate.limit.enabled", havingValue = "true")
 public class RedisConfig {
 
     @Value("${spring.data.redis.host:localhost}")
